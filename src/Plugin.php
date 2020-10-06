@@ -20,7 +20,6 @@ namespace Google\WP_Fetch_Metadata;
  */
 class Plugin {
 
-
 	/**
 	 * Absolute path to the plugin main file.
 	 *
@@ -54,7 +53,7 @@ class Plugin {
 	 */
 	public function __construct( $main_file ) {
 		$this->main_file = $main_file;
-		$this->policy = new DefaultResourceIsolationPolicy();
+		$this->policy    = new DefaultResourceIsolationPolicy();
 	}
 
 	/**
@@ -63,78 +62,12 @@ class Plugin {
 	 * @since 0.0.1
 	 */
 	public function register() {
-		/*
-		add_action('muplugins_loaded', function  () {
-			if( ! isset( $GLOBALS['fetch-metadata-policy'] ) ) {
-				$GLOBALS['fetch-metadata-policy'] = true;
-				$headers = getallheaders();
-				if(isset($headers['Sec-Fetch-Site'])) {
-					$GLOBALS['IT-WORKS'] = true;
-				} else {
-					$GLOBALS['IT-WORKS'] = false;//printf('browser does not support fetch metadata');
-				}
-			}
 
-		});*/
 		add_action(
 			'registered_taxonomy',
 			function () {
-				if ( ! $this->fetched ) {
-					$this->fetched = true;
-
-					$headers       = getallheaders();
-					$this->enabled = $headers['Sec-Fetch-Site'] . ' ' . $headers['Sec-Fetch-Mode'] . ' ' . $headers['Sec-Fetch-Dest'];
-					if ( ! isset( $headers['Sec-Fetch-Site'] ) ) {
-						return;
-					}
-
-					if ( in_array( $headers['Sec-Fetch-Site'], array( 'same-origin', 'same-site', 'none' ) ) ) {
-						return;
-					}
-
-					if (
-					$headers['Sec-Fetch-Mode'] === 'navigate' && $_SERVER['REQUEST_METHOD'] === 'GET'
-					&& ( ! in_array( $headers['Sec-Fetch-Dest'], array( 'object', 'embed' ) ) )
-					) {
-						return;
-					}
-
+				if ( ! $this->policy->isRequestAllowed( getallheaders(), $_SERVER ) ) {
 					wp_die( 'Resource Isolation Policy violated' );
-				}
-			}
-		);
-
-		add_action(
-			'wp_footer',
-			function () {
-				if ( $this->fetched ) {
-					// var_dump($this->method);
-					if ( $this->enabled ) {
-						printf( 'it works %s', $this->enabled );
-					} else {
-						printf( 'fetch metadata is not supported' );
-					}
-					printf( 'anythin' );
-				} else {
-					printf( ' not set' );
-				}
-			}
-		);
-
-		add_action(
-			'admin_footer',
-			function () {
-				if ( $this->fetched ) {
-					// var_dump($this->method);
-
-					if ( $this->enabled ) {
-						printf( 'it works' );
-					} else {
-						printf( 'fetch metadata is not supported' );
-					}
-					printf( 'anythin' );
-				} else {
-					printf( ' not set' );
 				}
 			}
 		);
