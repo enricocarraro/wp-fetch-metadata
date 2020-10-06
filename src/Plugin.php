@@ -37,12 +37,12 @@ class Plugin {
 	protected static $instance = null;
 
 	/**
-	 * Main instance of the plugin.
+	 * Isolation policy.
 	 *
 	 * @since 0.0.1
-	 * @var IsolationPolicyInterface|null
+	 * @var IsolationPolicyInterface
 	 */
-	protected $policy = null;
+	protected $policy;
 
 	/**
 	 * Sets the plugin main file.
