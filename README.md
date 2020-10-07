@@ -6,7 +6,7 @@
 
 # Fetch Metadata
 
-WordPress plugin to create Resource Isolation Policies based on Fetch Metadata Request Headers.
+WordPress plugin that protects your resources from web attacks with Resource and Navigation Isolation Policies using Fetch Metadata headers.
 
 ## Requirements
 
