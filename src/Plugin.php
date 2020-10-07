@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class Google\WP_Fetch_Metadata\Plugin
  *
@@ -8,8 +7,6 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://wordpress.org/plugins/fetch-metadata
  */
-
-
 
 namespace Google\WP_Fetch_Metadata;
 
@@ -40,9 +37,9 @@ class Plugin {
 	 * Isolation policy.
 	 *
 	 * @since 0.0.1
-	 * @var IsolationPolicyInterface
+	 * @var IsolationPolicyInterface[]
 	 */
-	protected $policy;
+	protected $policies;
 
 	/**
 	 * Sets the plugin main file.
@@ -53,7 +50,7 @@ class Plugin {
 	 */
 	public function __construct( $main_file ) {
 		$this->main_file = $main_file;
-		$this->policy    = new DefaultResourceIsolationPolicy();
+		$this->policies  = array( new DefaultResourceIsolationPolicy(), new DefaultNavigationIsolationPolicy() );
 	}
 
 	/**
@@ -66,8 +63,13 @@ class Plugin {
 		add_action(
 			'registered_taxonomy',
 			function () {
-				if ( ! $this->policy->isRequestAllowed( getallheaders(), $_SERVER ) ) {
-					wp_die( 'Resource Isolation Policy violated' );
+				$headers = getallheaders();
+				if ( isset( $headers[ IsolationPolicyInterface::SITE ] ) ) {
+					foreach ( $this->policies as &$policy ) {
+						if ( ! $policy->isRequestAllowed( $headers, $_SERVER ) ) {
+							wp_die( 'Isolation Policy violated.' );
+						}
+					}
 				}
 			}
 		);
@@ -116,7 +118,7 @@ class Plugin {
 	 * @return Plugin Plugin main instance.
 	 */
 	public static function instance() {
-		 return static::$instance;
+		return static::$instance;
 	}
 
 	/**
