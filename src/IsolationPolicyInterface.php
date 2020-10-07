@@ -10,6 +10,11 @@
 
 namespace Google\WP_Fetch_Metadata;
 
+/**
+ * Isolation policy interface.
+ *
+ * @since 0.0.1
+ */
 interface IsolationPolicyInterface {
 	const DEST                 = 'Sec-Fetch-Dest';
 	const DEST_AUDIO           = 'audio';
@@ -51,12 +56,13 @@ interface IsolationPolicyInterface {
 	const VARY = 'Vary';
 
 	/**
-	 * Is request allowed?
+	 * Checks if the current request can be allowed.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
-	 * @return bool True if the policy allows the current request, false otherwise.
+	 * @param array[string]string $headers Request headers.
+	 * @param array[string]string $server $_SERVER super-global variable.
 	 */
-	public function isRequestAllowed( $headers, $server);
+	public function is_request_allowed( $headers, $server);
 
 }

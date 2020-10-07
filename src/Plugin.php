@@ -64,9 +64,10 @@ class Plugin {
 			'registered_taxonomy',
 			function () {
 				$headers = getallheaders();
+				// Browser supports Fetch Metadata.
 				if ( isset( $headers[ IsolationPolicyInterface::SITE ] ) ) {
 					foreach ( $this->policies as &$policy ) {
-						if ( ! $policy->isRequestAllowed( $headers, $_SERVER ) ) {
+						if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
 							wp_die( 'Isolation Policy violated.' );
 						}
 					}
