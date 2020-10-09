@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Google\WP_Fetch_Metadata\IsolationPolicyInterface
+ * Class Google\WP_Fetch_Metadata\Policy\Isolation_Policy_Interface
  *
  * @package   Google\WP_Fetch_Metadata
  * @copyright 2020 Google LLC
@@ -8,14 +8,14 @@
  * @link      https://wordpress.org/plugins/fetch-metadata
  */
 
-namespace Google\WP_Fetch_Metadata;
+namespace Google\WP_Fetch_Metadata\Policy;
 
 /**
  * Isolation policy interface.
  *
  * @since 0.0.1
  */
-interface IsolationPolicyInterface {
+interface Isolation_Policy_Interface {
 	const DEST                 = 'Sec-Fetch-Dest';
 	const DEST_AUDIO           = 'audio';
 	const DEST_AUDIOWORKLET    = 'audioworklet';

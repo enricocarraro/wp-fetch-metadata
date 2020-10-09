@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Google\WP_Fetch_Metadata\DefaultResourceIsolationPolicy
+ * Class Google\WP_Fetch_Metadata\Policy\Default_Resource_Isolation_Policy
  *
  * @package   Google\WP_Fetch_Metadata
  * @copyright 2020 Google LLC
@@ -8,19 +8,19 @@
  * @link      https://wordpress.org/plugins/fetch-metadata
  */
 
-namespace Google\WP_Fetch_Metadata;
+namespace Google\WP_Fetch_Metadata\Policy;
 
 /**
- * Default resource isolation policy that implements {@see IsolationPolicyInterface}.
+ * Default resource isolation policy that implements {@see Isolation_Policy_Interface}.
  * This policy is based on {@link https://web.dev/fetch-metadata/ web.dev/fetch-metadata/}.
  *
- * @see IsolationPolicyInterface
+ * @see Isolation_Policy_Interface
  *
  * @link https://web.dev/fetch-metadata/ web.dev/fetch-metadata/
  *
  * @since 0.0.1
  */
-class DefaultResourceIsolationPolicy implements IsolationPolicyInterface {
+class Default_Resource_Isolation_Policy implements Isolation_Policy_Interface {
 	/**
 	 * Checks if the current request can be allowed.
 	 *
