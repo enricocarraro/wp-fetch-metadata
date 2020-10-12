@@ -10,6 +10,11 @@
 
 namespace Google\WP_Fetch_Metadata;
 
+use Google\WP_Fetch_Metadata\Policy\Isolation_Policy;
+use Google\WP_Fetch_Metadata\Policy\Default_Resource_Isolation_Policy;
+use Google\WP_Fetch_Metadata\Policy\Default_Navigation_Isolation_Policy;
+use Google\WP_Fetch_Metadata\Admin\Settings_Screen;
+
 /**
  * Main class for the plugin.
  *
@@ -34,10 +39,26 @@ class Plugin {
 	protected static $instance = null;
 
 	/**
-	 * Isolation policy.
+	 * Policy Registry
 	 *
 	 * @since 0.0.1
-	 * @var IsolationPolicyInterface[]
+	 * @var Policy_Registry
+	 */
+	protected $policy_registry;
+
+	/**
+	 * Policies Setting
+	 *
+	 * @since 0.0.1
+	 * @var Policies_Setting
+	 */
+	protected $policies_setting;
+
+	/**
+	 * Policies
+	 *
+	 * @since 0.0.1
+	 * @var Policies
 	 */
 	protected $policies;
 
@@ -50,7 +71,10 @@ class Plugin {
 	 */
 	public function __construct( $main_file ) {
 		$this->main_file = $main_file;
-		$this->policies  = array( new DefaultResourceIsolationPolicy(), new DefaultNavigationIsolationPolicy() );
+
+		$this->policy_registry  = new Policy_Registry();
+		$this->policies         = new Policies( $this->policy_registry );
+		$this->policies_setting = new Policies_Setting();
 	}
 
 	/**
@@ -59,21 +83,57 @@ class Plugin {
 	 * @since 0.0.1
 	 */
 	public function register() {
+		$this->policies_setting->register();
+
+		add_filter(
+			'user_has_cap',
+			array( $this, 'grant_fetch_metadata_cap' )
+		);
+
+		add_action(
+			'googlefetchmetadata_register_policies',
+			function( $policy_registry ) {
+				$policy_registry->register( new Default_Resource_Isolation_Policy( 'default-resource-isolation', __( 'Default Resource Isolation Policy', 'fetch-metadata' ) ) );
+				$policy_registry->register( new Default_Navigation_Isolation_Policy( 'default-navigation-isolation', __( 'Default Navigation Isolation Policy', 'fetch-metadata' ) ) );
+			}
+		);
+
+		$this->register_policies();
+
+		add_action(
+			'admin_menu',
+			function() {
+				$admin_screen = new Admin\Settings_Screen( $this->policies, $this->policies_setting );
+				$admin_screen->register_menu();
+			}
+		);
 
 		add_action(
 			'registered_taxonomy',
 			function () {
-				$headers = getallheaders();
-				// Browser supports Fetch Metadata.
-				if ( isset( $headers[ IsolationPolicyInterface::SITE ] ) ) {
-					foreach ( $this->policies as &$policy ) {
-						if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
-							wp_die( 'Isolation Policy violated.' );
-						}
-					}
-				}
+				$enforce_policies = new Enforce_Policies( $this->policies, $this->policies_setting );
+				$enforce_policies->enforce();
 			}
 		);
+	}
+
+	/**
+	 * Instantiates and registers policies.
+	 *
+	 * @since 0.0.1
+	 */
+	private function register_policies() {
+		/**
+		 * Fires when the Plugin class is ready to receive policies.
+		 *
+		 * The Plugin class stores the policies in the Policy_Registry instance.
+		 *
+		 * @since n.e.x.t.
+		 *
+		 * @param Policy_Registry $policy_registry
+		 */
+		do_action( 'googlefetchmetadata_register_policies', $this->policy_registry );
+
 	}
 
 	/**
@@ -109,6 +169,36 @@ class Plugin {
 	 */
 	public function url( $relative_path = '/' ) {
 		return plugin_dir_url( $this->main_file ) . ltrim( $relative_path, '/' );
+	}
+
+	/**
+	 * Gets the URL to the plugin's settings screen.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string Settings screen URL.
+	 */
+	public function settings_screen_url() {
+		return add_query_arg( 'page', Admin\Settings_Screen::SLUG, admin_url( Admin\Settings_Screen::PARENT_SLUG ) );
+	}
+
+	/**
+	 * Dynamically grants the 'manage_fetch_metadata' capability based on 'manage_options'.
+	 *
+	 * This method is hooked into the `user_has_cap` filter and can be unhooked and replaced with custom functionality
+	 * if needed.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $allcaps Associative array of $cap => $grant pairs.
+	 * @return array Filtered $allcaps array.
+	 */
+	public function grant_fetch_metadata_cap( array $allcaps ) {
+		if ( isset( $allcaps['manage_options'] ) ) {
+			$allcaps[ Admin\Settings_Screen::CAPABILITY ] = $allcaps['manage_options'];
+		}
+
+		return $allcaps;
 	}
 
 	/**

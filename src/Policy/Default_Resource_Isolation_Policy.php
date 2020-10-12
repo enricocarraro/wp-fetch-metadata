@@ -11,23 +11,25 @@
 namespace Google\WP_Fetch_Metadata\Policy;
 
 /**
- * Default resource isolation policy that implements {@see Isolation_Policy_Interface}.
+ * Default resource isolation policy that implements {@see Isolation_Policy}.
  * This policy is based on {@link https://web.dev/fetch-metadata/ web.dev/fetch-metadata/}.
  *
- * @see Isolation_Policy_Interface
+ * @see Isolation_Policy
  *
  * @link https://web.dev/fetch-metadata/ web.dev/fetch-metadata/
  *
  * @since 0.0.1
  */
-class Default_Resource_Isolation_Policy implements Isolation_Policy_Interface {
+class Default_Resource_Isolation_Policy extends Isolation_Policy {
+
+
 	/**
 	 * Checks if the current request can be allowed.
 	 *
 	 * @since 0.0.1
 	 *
-	 * @param array[string]string $headers Request headers.
-	 * @param array[string]string $server $_SERVER super-global variable.
+	 * @param string[string] $headers Request headers.
+	 * @param string[string] $server $_SERVER super-global variable.
 	 */
 	public function is_request_allowed( $headers, $server ) {
 		// Allow same-site, same-origin and direct navigation.

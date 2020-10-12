@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Google\WP_Fetch_Metadata\Policy\Isolation_Policy_Interface
+ * Class Google\WP_Fetch_Metadata\Policy\Isolation_Policy
  *
  * @package   Google\WP_Fetch_Metadata
  * @copyright 2020 Google LLC
@@ -11,11 +11,11 @@
 namespace Google\WP_Fetch_Metadata\Policy;
 
 /**
- * Isolation policy interface.
+ * Isolation policy abstract class.
  *
  * @since 0.0.1
  */
-interface Isolation_Policy_Interface {
+abstract class Isolation_Policy {
 	const DEST                 = 'Sec-Fetch-Dest';
 	const DEST_AUDIO           = 'audio';
 	const DEST_AUDIOWORKLET    = 'audioworklet';
@@ -55,6 +55,41 @@ interface Isolation_Policy_Interface {
 
 	const VARY = 'Vary';
 
+	const STATUS_ENABLED  = 'enabled';
+	const STATUS_DISABLED = 'disabled';
+	const STATUS_REPORT   = 'reporting';
+
+	/**
+	 * Policy slug.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @var string
+	 */
+	protected $slug;
+
+	/**
+	 * Policy title.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @var string
+	 */
+	protected $title;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param string $slug Policy slug.
+	 * @param string $title Policy title.
+	 */
+	public function __construct( $slug, $title ) {
+		$this->slug  = $slug;
+		$this->title = $title;
+	}
+
 	/**
 	 * Checks if the current request can be allowed.
 	 *
@@ -62,7 +97,25 @@ interface Isolation_Policy_Interface {
 	 *
 	 * @param array[string]string $headers Request headers.
 	 * @param array[string]string $server $_SERVER super-global variable.
+	 *
+	 * @return bool
 	 */
-	public function is_request_allowed( $headers, $server);
+	abstract public function is_request_allowed( $headers, $server);
+
+	/**
+	 * Magic getter.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string $prop Property to get.
+	 * @return mixed The property value, or null if property not set.
+	 */
+	public function __get( $prop ) {
+		if ( 'title' === $prop || 'slug' === $prop || 'status' === $prop ) {
+			return $this->{$prop};
+		}
+
+		return null;
+	}
 
 }
