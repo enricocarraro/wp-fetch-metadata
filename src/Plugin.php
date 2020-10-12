@@ -174,7 +174,7 @@ class Plugin {
 	/**
 	 * Gets the URL to the plugin's settings screen.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return string Settings screen URL.
 	 */
@@ -188,7 +188,7 @@ class Plugin {
 	 * This method is hooked into the `user_has_cap` filter and can be unhooked and replaced with custom functionality
 	 * if needed.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param array $allcaps Associative array of $cap => $grant pairs.
 	 * @return array Filtered $allcaps array.

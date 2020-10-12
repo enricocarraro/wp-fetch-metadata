@@ -16,14 +16,14 @@ use Google\WP_Fetch_Metadata\Policies_Setting;
 /**
  * Class for the admin settings screen to control policies.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 class Settings_Screen {
 
 	/**
 	 * The admin page slug.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var string
 	 */
 	const SLUG = 'fetch_metadata_settings';
@@ -31,7 +31,7 @@ class Settings_Screen {
 	/**
 	 * The admin page parent slug.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var string
 	 */
 	const PARENT_SLUG = 'options-general.php';
@@ -39,7 +39,7 @@ class Settings_Screen {
 	/**
 	 * The capability required to access the admin screen.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var string
 	 */
 	const CAPABILITY = 'manage_fetch_metadata';
@@ -47,7 +47,7 @@ class Settings_Screen {
 	/**
 	 * Policies controller instance.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var Policies
 	 */
 	protected $policies;
@@ -55,7 +55,7 @@ class Settings_Screen {
 	/**
 	 * Policies setting instance.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var Policies_Setting
 	 */
 	protected $policies_setting;
@@ -63,7 +63,7 @@ class Settings_Screen {
 	/**
 	 * Constructor.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param Isolation_Policy[] $policies         List of available policies.
 	 * @param Policies_Setting   $policies_setting Policies setting instance.
@@ -76,7 +76,7 @@ class Settings_Screen {
 	/**
 	 * Registers the menu item for the admin screen.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 */
 	public function register_menu() {
 		$hook_suffix = add_submenu_page(
@@ -98,7 +98,7 @@ class Settings_Screen {
 	/**
 	 * Renders the admin screen.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 */
 	public function render() {
 		?>
@@ -144,7 +144,7 @@ class Settings_Screen {
 	/**
 	 * Adds settings sections and fields.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 */
 	protected function add_settings_ui() {
 		add_settings_section( 'default', '', null, self::SLUG );
@@ -169,10 +169,10 @@ class Settings_Screen {
 	/**
 	 * Renders the UI field for determining the status of a policy.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param Isolation_Policy $policy Isolation policy.
-	 * @param bool             $status  Status set for the isolation policy.
+	 * @param string           $status  Status set for the isolation policy.
 	 */
 	protected function render_field( $policy, $status ) {
 		$choices = array(

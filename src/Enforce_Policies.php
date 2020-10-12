@@ -15,7 +15,7 @@ use Google\WP_Fetch_Metadata\Policy\Isolation_Policy;
 /**
  * Class for enforcing fetch metadata policies.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 class Enforce_Policies {
 

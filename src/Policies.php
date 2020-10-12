@@ -13,14 +13,14 @@ namespace Google\WP_Fetch_Metadata;
 /**
  * Class for controlling policies.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 class Policies {
 
 	/**
 	 * Internal storage for lazy-loaded policies, also to prevent double initialization.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var array
 	 */
 	protected $policies = array();
@@ -28,7 +28,7 @@ class Policies {
 	/**
 	 * Policy Registry
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 * @var Policy_Registry
 	 */
 	protected $policy_registry;
@@ -36,7 +36,7 @@ class Policies {
 	/**
 	 * Constructor
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param Policy_Registry $policy_registry Policy Registry instance.
 	 */
@@ -47,7 +47,7 @@ class Policies {
 	/**
 	 * Gets all the available policies.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return Isolation_Policy[string] Associative array of $policy_slug => $policy_instance pairs.
 	 */

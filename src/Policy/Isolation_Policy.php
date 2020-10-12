@@ -105,7 +105,7 @@ abstract class Isolation_Policy {
 	/**
 	 * Magic getter.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param string $prop Property to get.
 	 * @return mixed The property value, or null if property not set.

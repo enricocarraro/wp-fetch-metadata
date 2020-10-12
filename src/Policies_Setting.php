@@ -13,7 +13,7 @@ namespace Google\WP_Fetch_Metadata;
 /**
  * Class representing the policies setting.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 class Policies_Setting {
 
@@ -22,7 +22,7 @@ class Policies_Setting {
 	/**
 	 * Registers the admin screen with WordPress.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 */
 	public function register() {
 		add_action(
@@ -45,7 +45,7 @@ class Policies_Setting {
 	/**
 	 * Gets the policies list from the option.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @return array Associative array of $policy_name => $active pairs.
 	 */
@@ -56,7 +56,7 @@ class Policies_Setting {
 	/**
 	 * Sanitizes the value for the setting.
 	 *
-	 * @since 0.1.0
+	 * @since 0.0.1
 	 *
 	 * @param mixed $value Unsanitized setting value.
 	 * @return array Associative array of $policy_name => $policy_origins pairs.
