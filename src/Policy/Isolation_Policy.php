@@ -95,8 +95,8 @@ abstract class Isolation_Policy {
 	 *
 	 * @since 0.0.1
 	 *
-	 * @param array[string]string $headers Request headers.
-	 * @param array[string]string $server $_SERVER super-global variable.
+	 * @param string[string] $headers Request headers.
+	 * @param string[string] $server $_SERVER super-global variable.
 	 *
 	 * @return bool
 	 */
