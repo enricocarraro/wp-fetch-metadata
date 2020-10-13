@@ -63,6 +63,14 @@ class Plugin {
 	protected $policies;
 
 	/**
+	 * Policy Enforcer.
+	 *
+	 * @since 0.0.1
+	 * @var Enforce_Policies
+	 */
+	protected $enforce_policies;
+
+	/**
 	 * Sets the plugin main file.
 	 *
 	 * @since 0.0.1
@@ -75,6 +83,7 @@ class Plugin {
 		$this->policy_registry  = new Policy_Registry();
 		$this->policies         = new Policies( $this->policy_registry );
 		$this->policies_setting = new Policies_Setting();
+		$this->enforce_policies = new Enforce_Policies( $this->policies, $this->policies_setting );
 	}
 
 	/**
@@ -83,13 +92,6 @@ class Plugin {
 	 * @since 0.0.1
 	 */
 	public function register() {
-		$this->policies_setting->register();
-
-		add_filter(
-			'user_has_cap',
-			array( $this, 'grant_fetch_metadata_cap' )
-		);
-
 		add_action(
 			'googlefetchmetadata_register_policies',
 			function( $policy_registry ) {
@@ -101,6 +103,23 @@ class Plugin {
 		$this->register_policies();
 
 		add_action(
+			'registered_taxonomy',
+			array( $this->enforce_policies, 'enforce' )
+		);
+
+		add_action(
+			'admin_init',
+			array( $this->enforce_policies, 'send_headers' )
+		);
+
+		add_action(
+			'send_headers',
+			array( $this->enforce_policies, 'send_headers' )
+		);
+
+		$this->policies_setting->register();
+
+		add_action(
 			'admin_menu',
 			function() {
 				$admin_screen = new Admin\Settings_Screen( $this->policies, $this->policies_setting );
@@ -108,12 +127,9 @@ class Plugin {
 			}
 		);
 
-		add_action(
-			'registered_taxonomy',
-			function () {
-				$enforce_policies = new Enforce_Policies( $this->policies, $this->policies_setting );
-				$enforce_policies->enforce();
-			}
+		add_filter(
+			'user_has_cap',
+			array( $this, 'grant_fetch_metadata_cap' )
 		);
 	}
 

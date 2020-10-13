@@ -19,6 +19,8 @@ use Google\WP_Fetch_Metadata\Policy\Isolation_Policy;
  */
 class Enforce_Policies {
 
+	const HTTP_UNAUTHORIZED = 401;
+
 	/**
 	 * Policies Setting.
 	 *
@@ -36,12 +38,13 @@ class Enforce_Policies {
 	protected $policies;
 
 	/**
-	 * True if the active policies have already been enforced.
+	 * Number of active policies that have been enforced.
 	 *
 	 * @since 0.0.1
-	 * @var bool
+	 *
+	 * @var int
 	 */
-	protected static $enforced = false;
+	protected $enforced_policies = 0;
 
 	/**
 	 * Constructor.
@@ -66,36 +69,58 @@ class Enforce_Policies {
 		$option   = $this->policies_setting->get();
 		$headers  = getallheaders();
 
-		if ( ! static::$enforced
+		if ( 0 === $this->enforced_policies++
 		// Browser supports Fetch Metadata.
 		&& isset( $headers[ Isolation_Policy::SITE ] ) ) {
 			foreach ( $option as $policy_slug => $policy_status_array ) {
 				$policy_status = $policy_status_array[0];
 
-				if ( ! isset( $policies[ $policy_slug ] ) ) {
+				if ( ! isset( $policies[ $policy_slug ] ) || empty( $policy_status ) || Isolation_Policy::STATUS_DISABLED === $policy_status ) {
 					continue;
 				}
 
 				$policy = $policies[ $policy_slug ];
 
-				if ( empty( $policy_status ) || Isolation_Policy::STATUS_DISABLED === $policy_status ) {
-					continue;
-				}
-
 				if ( Isolation_Policy::STATUS_ENABLED === $policy_status ) {
 					if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
-						// translators: %s is the policy name.
-						wp_die( sprintf( '%s violated.', $policy->title ) );
+						// Set Vary header and terminate without fully loading WordPress.
+						$this->send_headers();
+						wp_die(
+							/* translators: %s: policy name. */
+							sprintf( '%s violated.', $policy->title ),
+							__( 'Isolation policy violated' ),
+							array(
+								'response' => self::HTTP_UNAUTHORIZED,
+								'code'     => 'googlefetchmetadata_isolation_policy_violated',
+							)
+						);
 						// TODO: Add reporting.
+						break;
 					}
 				} elseif ( Isolation_Policy::STATUS_REPORT === $policy_status ) {
 					// TODO: Add reporting.
 					continue;
 				}
 			}
-
-			static::$enforced = true;
 		}
-
+	}
+	/**
+	 * Sets Vary header.
+	 *
+	 * @since 0.0.1
+	 */
+	public function send_headers() {
+		if ( 0 !== $this->enforced_policies ) {
+			header(
+				sprintf(
+					'%s: %s, %s, %s',
+					Isolation_Policy::VARY,
+					Isolation_Policy::DEST,
+					Isolation_Policy::MODE,
+					Isolation_Policy::SITE
+				),
+				false
+			);
+		}
 	}
 }
