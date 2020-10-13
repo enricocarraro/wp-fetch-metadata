@@ -69,7 +69,7 @@ class Enforce_Policies {
 		$option   = $this->policies_setting->get();
 		$headers  = getallheaders();
 
-		if ( 0 === $this->enforced_policies++
+		if ( 0 === $this->enforced_policies
 		// Browser supports Fetch Metadata.
 		&& isset( $headers[ Isolation_Policy::SITE ] ) ) {
 			foreach ( $option as $policy_slug => $policy_status_array ) {
@@ -101,6 +101,7 @@ class Enforce_Policies {
 					// TODO: Add reporting.
 					continue;
 				}
+				$this->enforced_policies++;
 			}
 		}
 	}
