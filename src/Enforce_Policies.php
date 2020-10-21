@@ -94,10 +94,10 @@ class Enforce_Policies {
 						$this->send_headers();
 						wp_die(
 						/* translators: %s: policy name. */
-							sprintf( '%s violated.', $policy->title ),
-							__( 'Isolation policy violated' ),
+							esc_html( sprintf( __( '%s violated.' ), $policy->title ) ),
+							esc_html_e( 'Isolation policy violated' ),
 							array(
-								'response' => self::HTTP_UNAUTHORIZED,
+								'response' => esc_html( self::HTTP_UNAUTHORIZED ),
 								'code'     => 'googlefetchmetadata_isolation_policy_violated',
 							)
 						);
