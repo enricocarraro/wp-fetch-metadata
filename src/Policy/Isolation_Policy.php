@@ -103,6 +103,32 @@ abstract class Isolation_Policy {
 	abstract public function is_request_allowed( $headers, $server);
 
 	/**
+	 * Policy violation error message.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param string[string] $headers Request headers.
+	 * @param string[string] $server $_SERVER super-global variable.
+	 *
+	 * @return string Error message.
+	 */
+	public function error_message( $headers, $server ) {
+		return sprintf(
+			/* translators: %1$s: policy title, %2$s: request method, %3$s: request URI. */
+			__( '%1$s violated for %2$s request to %3$s: %4$s=%5$s, %6$s=%7$s, %8$s=%9$s.' ),
+			$this->title,
+			$server['REQUEST_METHOD'],
+			$server['REQUEST_URI'],
+			self::DEST,
+			$headers[ self::DEST ],
+			self::MODE,
+			$headers[ self::MODE ],
+			self::SITE,
+			$headers[ self::SITE ]
+		);
+	}
+
+	/**
 	 * Magic getter.
 	 *
 	 * @since 0.0.1
@@ -111,7 +137,7 @@ abstract class Isolation_Policy {
 	 * @return mixed The property value, or null if property not set.
 	 */
 	public function __get( $prop ) {
-		if ( 'title' === $prop || 'slug' === $prop || 'status' === $prop ) {
+		if ( 'title' === $prop || 'slug' === $prop ) {
 			return $this->{$prop};
 		}
 

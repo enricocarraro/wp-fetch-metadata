@@ -80,13 +80,20 @@ class Enforce_Policies {
 				}
 
 				$policy = $policies[ $policy_slug ];
-
-				if ( Isolation_Policy::STATUS_ENABLED === $policy_status ) {
-					if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
+				if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
+					// Since the policy status can either REPORT or ENABLED, log the error.
+					error_log(
+						sprintf(
+							/* translators: %s: isolation policy error message. */
+							__( 'Isolation policy violation: %s' ),
+							$policy->error_message( $headers, $_SERVER )
+						)
+					);
+					if ( Isolation_Policy::STATUS_ENABLED === $policy_status ) {
 						// Set Vary header and terminate without fully loading WordPress.
 						$this->send_headers();
 						wp_die(
-							/* translators: %s: policy name. */
+						/* translators: %s: policy name. */
 							sprintf( '%s violated.', $policy->title ),
 							__( 'Isolation policy violated' ),
 							array(
@@ -94,12 +101,7 @@ class Enforce_Policies {
 								'code'     => 'googlefetchmetadata_isolation_policy_violated',
 							)
 						);
-						// TODO: Add reporting.
-						break;
 					}
-				} elseif ( Isolation_Policy::STATUS_REPORT === $policy_status ) {
-					// TODO: Add reporting.
-					continue;
 				}
 				$this->enforced_policies++;
 			}
