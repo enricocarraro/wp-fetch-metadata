@@ -91,7 +91,7 @@ class Enforce_Policies {
 							esc_html( sprintf( __( '%s violated.' ), $policy->title ) ),
 							esc_html_e( 'Isolation policy violated' ),
 							array(
-								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: self::HTTP_UNAUTHORIZED is considered safe.
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: self::HTTP_UNAUTHORIZED is not used in the HTML context.
 								'response' => self::HTTP_UNAUTHORIZED,
 								'code'     => 'googlefetchmetadata_isolation_policy_violated',
 							)
