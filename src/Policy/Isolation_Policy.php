@@ -114,8 +114,7 @@ abstract class Isolation_Policy {
 	 */
 	public function error_message( $headers, $server ) {
 		return sprintf(
-			/* translators: %1$s: policy title, %2$s: request method, %3$s: request URI. */
-			__( '%1$s violated for %2$s request to %3$s: %4$s=%5$s, %6$s=%7$s, %8$s=%9$s.' ),
+			'%1$s violated for %2$s request to %3$s: %4$s=%5$s, %6$s=%7$s, %8$s=%9$s.',
 			$this->title,
 			$server['REQUEST_METHOD'],
 			$server['REQUEST_URI'],

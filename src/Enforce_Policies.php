@@ -82,13 +82,7 @@ class Enforce_Policies {
 				$policy = $policies[ $policy_slug ];
 				if ( ! $policy->is_request_allowed( $headers, $_SERVER ) ) {
 					// Since the policy status can either REPORT or ENABLED, log the error.
-					error_log(
-						sprintf(
-							/* translators: %s: isolation policy error message. */
-							__( 'Isolation policy violation: %s' ),
-							$policy->error_message( $headers, $_SERVER )
-						)
-					);
+					error_log( sprintf( 'Isolation policy violation: %s', $policy->error_message( $headers, $_SERVER ) ) );
 					if ( Isolation_Policy::STATUS_ENABLED === $policy_status ) {
 						// Set Vary header and terminate without fully loading WordPress.
 						$this->send_headers();
@@ -97,7 +91,8 @@ class Enforce_Policies {
 							esc_html( sprintf( __( '%s violated.' ), $policy->title ) ),
 							esc_html_e( 'Isolation policy violated' ),
 							array(
-								'response' => esc_html( self::HTTP_UNAUTHORIZED ),
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: self::HTTP_UNAUTHORIZED is considered safe.
+								'response' => self::HTTP_UNAUTHORIZED,
 								'code'     => 'googlefetchmetadata_isolation_policy_violated',
 							)
 						);
