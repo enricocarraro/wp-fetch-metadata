@@ -113,6 +113,7 @@ abstract class Isolation_Policy {
 	 * @return string Error message.
 	 */
 	public function error_message( $headers, $server ) {
+		// Doesn't need translation since it is only used for logging.
 		return sprintf(
 			'%1$s violated for %2$s request to %3$s: %4$s=%5$s, %6$s=%7$s, %8$s=%9$s.',
 			$this->title,
