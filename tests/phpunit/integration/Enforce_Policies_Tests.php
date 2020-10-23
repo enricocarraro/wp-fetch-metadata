@@ -30,12 +30,27 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	const MODE = 'HTTP_SEC_FETCH_MODE';
 
 	/**
+	 * Sets up the environment before each test.
+	 */
+	public function setUp() {
+		parent::setUp();
+		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
+	}
+
+	/**
+	 * Tears down the environment after each test.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
+	}
+
+	/**
 	 * Tests enforce() when all default policies are enabled and respected.
 	 *
 	 * @since 0.0.1
 	 */
 	public function testEnforceDefaultPoliciesEnabledRespected() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 		$_SERVER = array(
 			self::SITE       => Isolation_Policy::SITE_SAME_SITE,
 			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
@@ -71,7 +86,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 		}
 
 		$this->assertSame( '', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -80,20 +94,19 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceDefaultPoliciesEnabledViolated() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => '/',
+			);
 
-		$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
-		$resource   = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
+			$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
+			$resource   = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -115,7 +128,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 			$error = $e->getMessage();
 		}
 		$this->assertSame( $navigation->title . ' violated.', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -124,19 +136,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceNavigationPolicyEnabledRespected() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_SAME_ORIGIN,
-			self::MODE       => Isolation_Policy::MODE_NESTED_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_SAME_ORIGIN,
+				self::MODE       => Isolation_Policy::MODE_NESTED_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => '/',
+			);
 
-		$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
+			$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -156,7 +167,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 			$error = $e->getMessage();
 		}
 		$this->assertSame( '', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -165,19 +175,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceNavigationPolicyEnabledViolated() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NESTED_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NESTED_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => '/',
+			);
 
-		$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
+			$navigation = new Default_Navigation_Isolation_Policy( 'default-navigation', 'Default Navigation Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -196,7 +205,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 			$error = $e->getMessage();
 		}
 		$this->assertSame( $navigation->title . ' violated.', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -205,19 +213,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceResourcePolicyEnabledRespected() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => '/',
+			);
 
-		$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
+			$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -238,7 +245,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 		}
 
 		$this->assertSame( '', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -247,19 +253,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceResourcePolicyEnabledViolated() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'POST',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'POST',
+				'REQUEST_URI'    => '/',
+			);
 
-		$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
+			$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -280,7 +285,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 		}
 
 		$this->assertSame( $resource->title . ' violated.', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -289,19 +293,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceResourcePolicyReportRespected() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'GET',
+				'REQUEST_URI'    => '/',
+			);
 
-		$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
+			$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -322,7 +325,6 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 		}
 
 		$this->assertSame( '', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 
 	/**
@@ -331,19 +333,18 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 	 * @since 0.0.1
 	 */
 	public function testEnforceResourcePolicyReportViolated() {
-		add_filter( 'wp_die_handler', 'wp_die_handler_filter' );
-		$_SERVER = array(
-			self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
-			self::MODE       => Isolation_Policy::MODE_NAVIGATE,
-			self::DEST       => Isolation_Policy::DEST_DOCUMENT,
-			'REQUEST_METHOD' => 'POST',
-			'REQUEST_URI'    => '/',
-		);
+			$_SERVER = array(
+				self::SITE       => Isolation_Policy::SITE_CROSS_SITE,
+				self::MODE       => Isolation_Policy::MODE_NAVIGATE,
+				self::DEST       => Isolation_Policy::DEST_DOCUMENT,
+				'REQUEST_METHOD' => 'POST',
+				'REQUEST_URI'    => '/',
+			);
 
-		$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
+			$resource = new Default_Resource_Isolation_Policy( 'default-resource', 'Default Resource Isolation Policy' );
 
-		$setting = $this->createMock( Policies_Setting::class );
-		$setting
+			$setting = $this->createMock( Policies_Setting::class );
+			$setting
 			->method( 'get' )
 			->willReturn(
 				array(
@@ -364,6 +365,5 @@ class Enforce_Policies_Tests extends Integration_Test_Case {
 		}
 
 		$this->assertSame( '', $error );
-		remove_filter( 'wp_die_handler', 'wp_die_handler_filter' );
 	}
 }
