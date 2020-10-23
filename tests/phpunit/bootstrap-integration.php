@@ -65,3 +65,20 @@ $GLOBALS['wp_tests_options'] = array(
 
 // Load the WordPress tests environment.
 require_once $test_root . '/includes/bootstrap.php';
+
+/**
+ * Returns the name of the function to use to halt wp_die standard behavior.
+ *
+ * @since 0.0.1
+ */
+function wp_die_handler_filter() {
+	return 'wp_die_halt_handler';
+}
+/**
+ * Alternative wp_die handler that throws an exception for testing purposes.
+ *
+ * @since 0.0.1
+ */
+function wp_die_halt_handler( $message, $title, $args ) {
+	throw new \Exception( $message );
+}
