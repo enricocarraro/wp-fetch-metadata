@@ -1,12 +1,11 @@
-[![WordPress plugin](https://img.shields.io/wordpress/plugin/v/fetch-metadata.svg?maxAge=2592000)](https://wordpress.org/plugins/fetch-metadata/)
-[![WordPress](https://img.shields.io/wordpress/v/fetch-metadata.svg?maxAge=2592000)](https://wordpress.org/plugins/fetch-metadata/)
-[![Build Status](https://api.travis-ci.org/google/fetch-metadata.png?branch=master)](https://travis-ci.org/google/fetch-metadata)
-[![Code Climate](https://codeclimate.com/github/google/fetch-metadata/badges/gpa.svg)](https://codeclimate.com/github/google/fetch-metadata)
-[![Test Coverage](https://codeclimate.com/github/google/fetch-metadata/badges/coverage.svg)](https://codeclimate.com/github/google/fetch-metadata/coverage)
-
 # Fetch Metadata
 
-WordPress plugin that protects your resources from web attacks with Resource and Navigation Isolation Policies using Fetch Metadata headers.
+WordPress plugin that uses [Fetch Metadata Request Headers](https://w3c.github.io/webappsec-fetch-metadata/) to protect your site from clickjacking, reflected XSS, cross-origin attacks like cross-site request forgery (CSRF), cross-site script inclusion (XSSI), timing attacks, cross-origin information leaks or speculative execution side-channel (Spectre) attacks.
+The plugin includes a resource isolation policy and a navigation isolation policy by default. 
+
+![Settings Panel](./assets-wp-repo/screenshot-1.png)
+
+Read more about Fetch Metadata on [web.dev](https://web.dev/fetch-metadata/).
 
 ## Requirements
 
@@ -15,4 +14,10 @@ WordPress plugin that protects your resources from web attacks with Resource and
 
 ## Contributing
 
-Any kind of contributions to Fetch Metadata are welcome. Please [read the contributing guidelines](https://github.com/GoogleChromeLabs/wp-fetch-metadata/blob/master/CONTRIBUTING.md) to get started.
+Any kind of contributions to Fetch Metadata are welcome. Please [read the contributing guidelines](https://github.com/enricocarraro/wp-fetch-metadata/blob/master/CONTRIBUTING.md) to get started.
+
+
+## Further Resources
+ * https://w3c.github.io/webappsec-fetch-metadata/
+ * https://web.dev/fetch-metadata/
+ 

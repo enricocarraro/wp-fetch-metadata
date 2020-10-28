@@ -4,12 +4,12 @@ Contributors:      google, enricocarraro
 Requires at least: 5.0
 Tested up to:      5.2
 Requires PHP:      5.6
-Stable tag:        1.0.0
+Stable tag:        0.0.1
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              isolation, policy, security, fetch, metadata, http, request, header
 
-WordPress plugin to create Resource Isolation Policies based on Fetch Metadata Request Headers.
+WordPress plugin to enforce Resource and Navigation Isolation Policies based on Fetch Metadata Request Headers.
 
 == Description ==
 
@@ -17,7 +17,7 @@ TODO.
 
 == Installation ==
 
-1. Upload the entire `fetch-metadata` folder to the `/wp-content/plugins/` directory or download it through the WordPress backend.
+1. Upload the entire `wp-fetch-metadata` folder to the `/wp-content/plugins/` directory or download it through the WordPress backend.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Frequently Asked Questions ==
@@ -40,6 +40,6 @@ TODO.
 
 == Changelog ==
 
-= 1.0.0 =
+= 0.0.1 =
 
 * Initial release
